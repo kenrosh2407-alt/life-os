@@ -1,38 +1,89 @@
+// src/components/RadialGauge.jsx
 import React from "react";
 
-const RadialGauge = ({ value = 0, max = 100, label }) => {
-  const radius = 50;
+const RadialGauge = ({ value, size = 210 }) => {
+  const strokeWidth = 18;
+  const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const progress = (value / max) * circumference;
+
+  // ring progress
+  const progress = (pct) =>
+    circumference - (pct / 100) * circumference;
 
   return (
-    <svg width="140" height="140" viewBox="0 0 140 140">
-      <circle
-        cx="70"
-        cy="70"
-        r={radius}
-        stroke="#eee"
-        strokeWidth="12"
-        fill="none"
-      />
-      <circle
-        cx="70"
-        cy="70"
-        r={radius}
-        stroke="#4cafef"
-        strokeWidth="12"
-        fill="none"
-        strokeDasharray={circumference}
-        strokeDashoffset={circumference - progress}
-        strokeLinecap="round"
-      />
-      <text x="50%" y="50%" textAnchor="middle" dy="6" fontSize="18">
-        {value}/{max}
-      </text>
-      <text x="50%" y="90%" textAnchor="middle" fontSize="14">
-        {label}
-      </text>
-    </svg>
+    <div className="rings" style={{ "--size": `${size}px` }}>
+      <svg viewBox={`0 0 ${size} ${size}`}>
+        <defs>
+          {/* Gradients for glow rings */}
+          <linearGradient id="gradMove" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#ff3b30" />
+            <stop offset="100%" stopColor="#ff9f0a" />
+          </linearGradient>
+          <linearGradient id="gradExercise" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#34c759" />
+            <stop offset="100%" stopColor="#30d158" />
+          </linearGradient>
+          <linearGradient id="gradStand" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#0a84ff" />
+            <stop offset="100%" stopColor="#64d2ff" />
+          </linearGradient>
+        </defs>
+
+        {/* Track */}
+        <circle
+          className="track"
+          strokeWidth={strokeWidth}
+          fill="none"
+          r={radius}
+          cx={size / 2}
+          cy={size / 2}
+        />
+
+        {/* Move ring */}
+        <circle
+          className="move"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={progress(value.move)}
+          fill="none"
+          r={radius}
+          cx={size / 2}
+          cy={size / 2}
+        />
+
+        {/* Exercise ring */}
+        <circle
+          className="exercise"
+          strokeWidth={strokeWidth - 5}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={progress(value.exercise)}
+          fill="none"
+          r={radius - 24}
+          cx={size / 2}
+          cy={size / 2}
+        />
+
+        {/* Stand ring */}
+        <circle
+          className="stand"
+          strokeWidth={strokeWidth - 8}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={progress(value.stand)}
+          fill="none"
+          r={radius - 46}
+          cx={size / 2}
+          cy={size / 2}
+        />
+      </svg>
+
+      <div className="label">
+        <div className="percent">{value.overall}%</div>
+        <div className="small">overall</div>
+      </div>
+    </div>
   );
 };
 

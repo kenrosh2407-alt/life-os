@@ -1,26 +1,27 @@
-import React from "react";
+// src/components/ProgressBar.jsx
+import React, { useMemo } from "react";
 
-const ProgressBar = ({ value = 0, max = 100, label }) => {
-  const percentage = Math.min((value / max) * 100, 100);
+/**
+ * Glassy progress bar with subtle animation.
+ * value: 0..100
+ * label: optional text to show above the bar
+ * suffix: optional trailing text at the right end (e.g. "41%")
+ */
+export default function ProgressBar({ value = 0, label, suffix }) {
+  const pct = Math.max(0, Math.min(100, Math.round(value)));
+  const aria = useMemo(() => ({ role: "progressbar", "aria-valuenow": pct, "aria-valuemin": 0, "aria-valuemax": 100 }), [pct]);
 
   return (
-    <div style={{ marginBottom: "12px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>{label}</span>
-        <span>{value}/{max}</span>
+    <div className="pb">
+      {label ? <div className="pb__label">{label}</div> : null}
+
+      <div className="pb__rail" {...aria}>
+        <div className="pb__fill" style={{ width: `${pct}%` }}>
+          <div className="pb__shine" />
+        </div>
       </div>
-      <div style={{ height: "10px", background: "#eee", borderRadius: "5px" }}>
-        <div
-          style={{
-            width: `${percentage}%`,
-            background: "#4cafef",
-            height: "100%",
-            borderRadius: "5px",
-          }}
-        />
-      </div>
+
+      {suffix ? <div className="pb__suffix">{suffix}</div> : null}
     </div>
   );
-};
-
-export default ProgressBar;
+}

@@ -1,18 +1,24 @@
+// src/components/StatCard.jsx
 import React from "react";
 
-const StatCard = ({ title, value, unit }) => (
-  <div style={{
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    padding: "16px",
-    textAlign: "center",
-    flex: "1"
-  }}>
-    <h3>{title}</h3>
-    <p style={{ fontSize: "24px", margin: 0 }}>
-      {value} {unit}
-    </p>
-  </div>
-);
+export default function StatCard({
+  title,
+  time = "",
+  children,
+  footer,
+  dense = false,
+  className = "",
+}) {
+  return (
+    <section className={`card ${dense ? "card--dense" : ""} ${className}`}>
+      <header className="card__header">
+        <div className="card__title">{title}</div>
+        {time ? <div className="card__time">{time}</div> : null}
+      </header>
 
-export default StatCard;
+      <div className="card__body">{children}</div>
+
+      {footer ? <footer className="card__footer">{footer}</footer> : null}
+    </section>
+  );
+}

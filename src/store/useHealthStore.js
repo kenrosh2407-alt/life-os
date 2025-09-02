@@ -1,19 +1,17 @@
 import { create } from "zustand";
 
 const useHealthStore = create((set) => ({
-  steps: 0,
-  weight: 70,
-  height: 175,
-  waterIntake: 0,
-  foodCalories: 0,
-  habits: [],
+  steps: 2500,
+  water: 0.75,     // liters
+  weight: 72,
+  heightCm: 175,
+  calories: 900,
 
-  setSteps: (steps) => set({ steps }),
-  setWeight: (weight) => set({ weight }),
-  setHeight: (height) => set({ height }),
-  addWater: (ml) => set((state) => ({ waterIntake: state.waterIntake + ml })),
-  addCalories: (cals) => set((state) => ({ foodCalories: state.foodCalories + cals })),
-  addHabit: (habit) => set((state) => ({ habits: [...state.habits, habit] })),
+  addSteps: (n) => set((s) => ({ steps: s.steps + n })),
+  addWater: (l) => set((s) => ({ water: +(s.water + l).toFixed(2) })),
+  addCalories: (n) => set((s) => ({ calories: s.calories + n })),
+  setWeight: (kg) => set(() => ({ weight: +kg })),
+  setHeight: (cm) => set(() => ({ heightCm: +cm })),
 }));
 
 export default useHealthStore;
