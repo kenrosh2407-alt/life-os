@@ -36,4 +36,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           npm version "$LVL" -m "chore(release): %s [skip ci]"
-          git push --follow-tags
+          git push origin HEAD:main --follow-tags
