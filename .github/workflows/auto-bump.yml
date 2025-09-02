@@ -1,12 +1,9 @@
 name: Auto bump version
 
 on:
-  workflow_dispatch:
-    inputs:
-      level:
-        description: "Semver level: patch | minor | major"
-        required: false
-        default: patch
+  push:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -18,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0   # so tags/history are available
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -28,12 +25,9 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Bump version and push tag
-        env:
-          LEVEL: ${{ github.event.inputs.level }}
+      - name: Bump patch version and push tag
         run: |
-          LVL="${LEVEL:-patch}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          npm version "$LVL" -m "chore(release): %s [skip ci]"
-          git push origin HEAD:main --follow-tags
+          npm version patch -m "chore(release): %s [skip ci]"
+          git push --follow-tags
