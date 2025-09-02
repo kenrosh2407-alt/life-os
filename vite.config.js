@@ -6,7 +6,7 @@ import { version } from "./package.json"; // 👈 get version from package.json
 export default defineConfig({
   plugins: [react()],
   define: {
-    // 👇 inject the app version into your app
+    // 👇 inject the app version into your app as an environment variable
     "import.meta.env.VITE_APP_VERSION": JSON.stringify(version),
   },
 });
