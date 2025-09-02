@@ -1,8 +1,24 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command   = "npm ci && npm run build"
+  publish   = "dist"
+  node_version = "20"
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to   = "/index.html"
   status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/workbox-*.js"
+  [headers.values]
+    Cache-Control = "no-cache"
