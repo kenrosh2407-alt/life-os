@@ -1,12 +1,29 @@
-# React + Vite
+# LifeOS (Demo V1)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sleek, Apple-style glass UI **super-app** prototype you can open on your phone and add to your Home Screen.
 
-Currently, two official plugins are available:
+## Features (Demo)
+- Glass UI with **time-of-day** background
+- Tabs: **Health**, **News**, **Your Day**, **Drives**
+- Health: step goal mock, **food image upload**, randomized **AI-like suggestions**
+- Search bar → jumps to sections or Google
+- PWA basics: **manifest + service worker**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Run Locally
+Just open `index.html` or use any static server.
 
-## Expanding the ESLint configuration
+## Deploy to GitHub Pages
+1. Push to GitHub.
+2. Repo **Settings → Pages**:
+   - Source: *Deploy from a branch*
+   - Branch: `main` (root `/`)
+3. Live at: `https://<your-username>.github.io/<repo-name>/`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Add to Home Screen
+Open on your phone → **Add to Home Screen** for app-like behavior.
+
+## Next Up
+- Live news API
+- AI meal/workout planner
+- HealthKit/Google Fit via Capacitor
+- Data persistence

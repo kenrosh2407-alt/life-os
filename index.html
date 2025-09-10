@@ -1,15 +1,285 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#0ea5e9" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>LifeOS V1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#66A6FF" />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icon.svg" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+  <style>
+    :root{
+      --blur:16px;
+      --glass: rgba(255,255,255,0.16);
+      --glass-border: rgba(255,255,255,0.35);
+      --text:#fff;
+      --morning: linear-gradient(135deg,#FFEFBA 0%,#FFFFFF 100%);
+      --afternoon: linear-gradient(135deg,#89F7FE 0%,#66A6FF 100%);
+      --evening: linear-gradient(135deg,#2C3E50 0%,#4CA1AF 100%);
+      --card-radius:18px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:var(--morning);
+      transition: background 800ms ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .wrap{ max-width:980px; margin:0 auto; padding: env(safe-area-inset-top) 16px 120px; }
+    header{
+      display:flex; align-items:center; gap:12px;
+      padding:12px 16px; margin:16px;
+      border-radius: calc(var(--card-radius) + 6px);
+      background:var(--glass);
+      border:1px solid var(--glass-border);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      box-shadow: var(--shadow);
+    }
+    header img{ width:40px; height:40px; border-radius:12px }
+    header h1{ font-size:1.25rem; margin:0 }
+    header small{ opacity:.85 }
+    nav.tabs{ display:flex; gap:8px; overflow:auto; padding:8px 16px; margin:0 16px 8px; }
+    .tab-btn{
+      appearance:none; border:none; color:var(--text);
+      background:rgba(255,255,255,0.10);
+      border:1px solid rgba(255,255,255,0.25);
+      padding:10px 14px; border-radius:14px; font-weight:600;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all .25s ease;
+      white-space:nowrap;
+      cursor:pointer;
+    }
+    .tab-btn.active{ background:rgba(255,255,255,0.22); border-color:rgba(255,255,255,0.45) }
+    section{
+      display:none; margin: 8px 16px; padding:16px;
+      background: var(--glass); border:1px solid var(--glass-border);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
+      animation: rise .45s ease;
+    }
+    section.active{ display:block }
+    @keyframes rise { from {opacity:0; transform: translateY(8px)} to {opacity:1; transform: translateY(0)} }
+    h2{ margin:8px 0 16px }
+    .search{ margin: 8px 16px 16px; position:relative; }
+    .search input{
+      width:100%; padding:14px 44px 14px 14px; font-size:16px; border-radius:14px; border:1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.12); color:var(--text);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .search button{
+      position:absolute; right:6px; top:6px; height:38px; padding:0 12px;
+      border:none; border-radius:12px; font-weight:600; color:#0b1020;
+      background:#fff; cursor:pointer;
+    }
+    .goal{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+    .metric{ display:flex; align-items:center; gap:8px; padding:10px 12px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); border-radius:12px }
+    .food-list{ display:flex; gap:8px; flex-wrap:wrap }
+    .food-list img{ width:84px; height:84px; object-fit:cover; border-radius:12px; border:1px solid rgba(255,255,255,0.25) }
+    #news-list{ list-style:none; padding:0; margin:0 }
+    #news-list li{ margin:6px 0; padding:12px; background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.25); border-radius:12px }
+    #news-list a{ color:#fff; text-decoration:none }
+    .dock{
+      position:fixed; left:0; right:0; bottom:0;
+      padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+      display:flex; gap:10px; justify-content:space-around; align-items:center;
+      background: rgba(255,255,255,0.12);
+      border-top:1px solid rgba(255,255,255,0.35);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    }
+    .dock button{
+      appearance:none; border:none; background:transparent; color:#fff; font-size:12px;
+      display:flex; flex-direction:column; align-items:center; gap:6px; padding:6px 10px; border-radius:12px; cursor:pointer;
+    }
+    .dock button.active{ background: rgba(255,255,255,0.18) }
+    .muted{ opacity:.85 }
+    .divider{ height:1px; background:rgba(255,255,255,0.25); margin:12px 0 }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="assets/icon.svg" alt="LifeOS icon"/>
+      <div>
+        <h1>LifeOS</h1>
+        <small class="muted">Your life, one place — demo V1</small>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Primary">
+      <button class="tab-btn active" data-target="health">Health</button>
+      <button class="tab-btn" data-target="news">News</button>
+      <button class="tab-btn" data-target="day">Your Day</button>
+      <button class="tab-btn" data-target="drives">Drives</button>
+    </nav>
+
+    <div class="search">
+      <input id="search" placeholder="Search sections or type a web query…" />
+      <button id="searchGo">Go</button>
+    </div>
+
+    <section id="health" class="active" aria-labelledby="tab-health">
+      <h2>Health</h2>
+      <div class="goal">
+        <div class="metric">
+          <label for="step-goal">Step Goal</label>
+          <input id="step-goal" type="number" value="10000" style="width:110px; padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.10); color:#fff"/>
+        </div>
+        <div class="metric">Steps today: <strong id="current-steps">0</strong></div>
+        <button id="add-steps" class="tab-btn">+1,000</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3>Food tracker</h3>
+      <input type="file" id="food-image" accept="image/*" />
+      <div id="food-list" class="food-list" aria-live="polite"></div>
+
+      <div class="divider"></div>
+
+      <h3>AI suggestions (demo)</h3>
+      <button id="gen-suggestions" class="tab-btn">Generate weekly plan</button>
+      <div id="suggestions" class="muted" style="margin-top:8px"></div>
+    </section>
+
+    <section id="news">
+      <h2>News</h2>
+      <ul id="news-list">
+        <li class="muted">Loading sample headlines…</li>
+      </ul>
+    </section>
+
+    <section id="day">
+      <h2>Your Day</h2>
+      <p class="muted">A snapshot of your day (meetings, reminders, goals) will appear here. This is a demo placeholder.</p>
+      <div class="divider"></div>
+      <div class="metric">Wake window: <strong>7:00–23:00</strong></div>
+      <div class="metric">Focus block: <strong>14:00–16:00</strong></div>
+    </section>
+
+    <section id="drives">
+      <h2>Drives</h2>
+      <p class="muted">Future storage & integrations. Coming in later iterations.</p>
+    </section>
+  </div>
+
+  <div class="dock" role="tablist" aria-label="Bottom navigation">
+    <button class="dock-btn active" data-target="health">
+      <img src="assets/icon.svg" alt="" style="width:22px;height:22px"/>
+      <span>Health</span>
+    </button>
+    <button class="dock-btn" data-target="news"><span>📰</span><span>News</span></button>
+    <button class="dock-btn" data-target="day"><span>📅</span><span>Your Day</span></button>
+    <button class="dock-btn" data-target="drives"><span>🗂️</span><span>Drives</span></button>
+  </div>
+
+  <script>
+    (function setThemeByTime(){
+      const h = new Date().getHours();
+      const root = document.documentElement;
+      if (h < 12) document.body.style.background = getComputedStyle(root).getPropertyValue('--morning');
+      else if (h < 18) document.body.style.background = getComputedStyle(root).getPropertyValue('--afternoon');
+      else document.body.style.background = getComputedStyle(root).getPropertyValue('--evening');
+    })();
+
+    function activate(tab){
+      document.querySelectorAll('.tab-btn, .dock-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll(\`.tab-btn[data-target="\${tab}"], .dock-btn[data-target="\${tab}"]\`).forEach(b=>b.classList.add('active'));
+      document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.querySelectorAll('.tab-btn, .dock-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>activate(btn.dataset.target));
+    });
+
+    function goSearch(){
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      if (!q) return;
+      const sections = ['health','news','day','drives'];
+      const found = sections.find(s=> s.includes(q) || q.includes(s));
+      if (found) activate(found);
+      else window.open('https://www.google.com/search?q='+encodeURIComponent(q),'_blank');
+    }
+    document.getElementById('searchGo').addEventListener('click', goSearch);
+    document.getElementById('search').addEventListener('keydown', e=>{ if(e.key==='Enter') goSearch(); });
+
+    const stepsEl = document.getElementById('current-steps');
+    document.getElementById('add-steps').addEventListener('click', ()=>{
+      stepsEl.textContent = (parseInt(stepsEl.textContent,10) + 1000).toString();
+    });
+
+    document.getElementById('food-image').addEventListener('change', e=>{
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.src = url; img.alt = 'Meal'; img.loading = 'lazy';
+      img.addEventListener('load', ()=> URL.revokeObjectURL(url));
+      document.getElementById('food-list').appendChild(img);
+      e.target.value = '';
+    });
+
+    document.getElementById('gen-suggestions').addEventListener('click', ()=>{
+      const goals = [
+        'High-protein & steps focus',
+        'Balanced macros & mobility',
+        'Cutting phase (light deficit)',
+        'Endurance & hydration'
+      ];
+      const meals = [
+        'Greek yogurt + berries • Quinoa salad • Salmon + greens',
+        'Oats + banana • Chickpea wrap • Tofu stir-fry',
+        'Egg white scramble • Chicken bowl • Lentil soup',
+        'Smoothie bowl • Tuna sandwich • Grilled paneer + veggies'
+      ];
+      const workouts = [
+        'Mon/Wed/Fri: 30-min HIIT • Tue/Thu: 20-min mobility',
+        '4× week full-body 45-min • Daily 8k steps',
+        'Upper/Lower split • Weekend hike',
+        'Zone-2 cardio 30-min daily • 2× strength sessions'
+      ];
+      const i = Math.floor(Math.random()*goals.length);
+      document.getElementById('suggestions').innerHTML = \`
+        <div><strong>Goal:</strong> \${goals[i]}</div>
+        <div><strong>Meals:</strong> \${meals[i]}</div>
+        <div><strong>Workouts:</strong> \${workouts[i]}</div>
+      \`;
+    });
+
+    (function loadNews(){
+      const sample = [
+        { title:'AI wearable trends to watch this year', url:'#' },
+        { title:'Healthy habits: why small steps win', url:'#' },
+        { title:'Focus routines from top founders', url:'#' },
+        { title:'Meal prep hacks for busy weeks', url:'#' },
+        { title:'The future of personal “super-apps”', url:'#' },
+      ];
+      const ul = document.getElementById('news-list');
+      ul.innerHTML = '';
+      sample.forEach(a=>{
+        const li = document.createElement('li');
+        li.innerHTML = \`<a href="\${a.url}" target="_blank" rel="noopener">\${a.title}</a>\`;
+        ul.appendChild(li);
+      });
+    })();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', ()=> {
+        navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+      });
+    }
+  </script>
+</body>
 </html>
