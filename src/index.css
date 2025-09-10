@@ -1,234 +1,319 @@
-/* ===== Root variables ===== */
-:root {
-  --bg-0: #0b0b0c;
-  --bg-1: #121214;
-  --bg-2: #1b1b1e;
-  --card: rgba(255,255,255,0.06);
-  --border: rgba(255,255,255,0.12);
-  --text: #f2f2f2;
-  --muted: #9aa0a6;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LifeOS V1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#66A6FF" />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icon.svg" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 
-  --moveA: #ff3b30;   /* red/orange gradient */
-  --moveB: #ff9f0a;
-  --exerciseA: #34c759; /* greens */
-  --exerciseB: #30d158;
-  --standA: #0a84ff;   /* blues */
-  --standB: #64d2ff;
-}
+  <style>
+    :root{
+      --blur:16px;
+      --glass: rgba(255,255,255,0.16);
+      --glass-border: rgba(255,255,255,0.35);
+      --text:#fff;
 
-html, body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: radial-gradient(1000px 400px at -200px -100px, #2a2a2d15, #0000),
-              radial-gradient(800px 360px at 120% -120px, #2a2a2d15, #0000),
-              linear-gradient(180deg, var(--bg-0), var(--bg-1));
-  color: var(--text);
-  min-height: 100vh;
-}
+      /* Higher-contrast gradients */
+      --morning:   linear-gradient(135deg,#FFD194 0%,#D1913C 100%);  /* sunrise oranges */
+      --afternoon: linear-gradient(135deg,#89F7FE 0%,#66A6FF 100%);  /* bright blue */
+      --evening:   linear-gradient(135deg,#2C3E50 0%,#4CA1AF 100%);  /* deep teal */
 
-/* ===== Page shell ===== */
-.shell {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 24px 16px 96px;
-}
+      --card-radius:18px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
 
-.pageTop {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  padding: 10px 6px 16px;
-  margin: -8px -6px 8px;
-  background: linear-gradient(180deg, #0b0b0cCC 0%, #0b0b0c99 60%, transparent 100%);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #ffffff12;
-}
+    /* Optional: bias to darker background when user prefers dark mode */
+    @media (prefers-color-scheme: dark) {
+      body { background: var(--evening); }
+    }
 
-.pageTop h1 {
-  font-size: 28px;
-  letter-spacing: 0.3px;
-}
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:var(--morning);
+      transition: background 800ms ease, color 300ms ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-/* ===== Grid & cards ===== */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 16px;
-}
+    .wrap{ max-width:980px; margin:0 auto; padding: env(safe-area-inset-top) 16px 120px; }
 
-.card {
-  grid-column: span 6;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 14px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.05),
-    0 8px 30px rgba(0,0,0,0.35);
-  backdrop-filter: blur(14px);
-}
+    /* Header */
+    header{
+      display:flex; align-items:center; gap:12px;
+      padding:12px 16px; margin:16px;
+      border-radius: calc(var(--card-radius) + 6px);
+      background:var(--glass);
+      border:1px solid var(--glass-border);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      box-shadow: var(--shadow);
+    }
+    header img{ width:40px; height:40px; border-radius:12px }
+    header h1{ font-size:1.25rem; margin:0 }
+    header small{ opacity:.9 }
 
-.card--tall {
-  grid-column: span 6;
-  min-height: 300px;
-}
+    /* Tabs */
+    nav.tabs{ display:flex; gap:8px; overflow:auto; padding:8px 16px; margin:0 16px 8px; }
+    .tab-btn{
+      appearance:none; border:none; color:var(--text);
+      background:rgba(255,255,255,0.10);
+      border:1px solid rgba(255,255,255,0.25);
+      padding:10px 14px; border-radius:14px; font-weight:600;
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      transition: all .25s ease;
+      white-space:nowrap; cursor:pointer;
+    }
+    .tab-btn.active{ background:rgba(255,255,255,0.22); border-color:rgba(255,255,255,0.45) }
 
-@media (max-width: 900px) {
-  .card, .card--tall { grid-column: span 12; }
-}
+    /* Sections (cards) */
+    section{
+      display:none; margin: 8px 16px; padding:16px;
+      background: var(--glass); border:1px solid var(--glass-border);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
+      animation: rise .45s ease;
+    }
+    section.active{ display:block }
+    @keyframes rise { from {opacity:0; transform: translateY(8px)} to {opacity:1; transform: translateY(0)} }
+    h2{ margin:8px 0 16px }
 
-.card__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.card__title { font-weight: 700; }
-.card__time {
-  font-size: 12px;
-  color: var(--muted);
-  padding: 6px 10px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid #ffffff14;
-}
-.card__body { display: grid; gap: 12px; }
-.card__footer { margin-top: 6px; }
+    /* Search */
+    .search{ margin: 8px 16px 16px; position:relative; }
+    .search input{
+      width:100%; padding:14px 44px 14px 14px; font-size:16px; border-radius:14px; border:1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.12); color:var(--text);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .search button{
+      position:absolute; right:6px; top:6px; height:38px; padding:0 12px;
+      border:none; border-radius:12px; font-weight:600; color:#0b1020;
+      background:#fff; cursor:pointer;
+    }
 
-/* ===== Pills & small controls ===== */
-.pillRow { display: flex; gap: 8px; flex-wrap: wrap; }
-.pill {
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid #ffffff20;
-  background: linear-gradient(180deg, #232327, #1a1a1e);
-  color: #e6e6e6;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-  cursor: pointer;
-}
-.pill:hover { filter: brightness(1.08); }
+    /* Health UI bits */
+    .goal{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+    .metric{ display:flex; align-items:center; gap:8px; padding:10px 12px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); border-radius:12px }
+    .food-list{ display:flex; gap:8px; flex-wrap:wrap }
+    .food-list img{ width:84px; height:84px; object-fit:cover; border-radius:12px; border:1px solid rgba(255,255,255,0.25) }
 
-.row { display: flex; align-items: center; }
-.row.space { justify-content: space-between; }
-.row.gap { gap: 8px; }
+    /* News list */
+    #news-list{ list-style:none; padding:0; margin:0 }
+    #news-list li{ margin:6px 0; padding:12px; background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.25); border-radius:12px }
+    #news-list a{ color:#fff; text-decoration:none }
 
-.muted { color: var(--muted); font-size: 13px; }
-.statNumber { font-size: 40px; font-weight: 800; letter-spacing: 0.2px; }
-.uom { font-size: 14px; margin-left: 6px; color: var(--muted); }
+    /* Bottom dock */
+    .dock{
+      position:fixed; left:0; right:0; bottom:0;
+      padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+      display:flex; gap:10px; justify-content:space-around; align-items:center;
+      background: rgba(255,255,255,0.12);
+      border-top:1px solid rgba(255,255,255,0.35);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    }
+    .dock button{
+      appearance:none; border:none; background:transparent; color:#fff; font-size:12px;
+      display:flex; flex-direction:column; align-items:center; gap:6px; padding:6px 10px; border-radius:12px; cursor:pointer;
+    }
+    .dock button.active{ background: rgba(255,255,255,0.18) }
 
-/* ===== Activity ring area ===== */
-.ringsWrap { display: grid; place-items: center; }
+    .muted{ opacity:.9 }
+    .divider{ height:1px; background:rgba(255,255,255,0.25); margin:12px 0 }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="assets/icon.svg" alt="LifeOS icon"/>
+      <div>
+        <h1>LifeOS</h1>
+        <small class="muted">Your life, one place — demo V1</small>
+      </div>
+    </header>
 
-/* Legend */
-.legend { display: flex; gap: 14px; align-items: center; color: var(--muted); font-size: 13px; }
-.dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; margin: 0 6px 0 2px; }
-.dot--move { background: linear-gradient(90deg, var(--moveA), var(--moveB)); }
-.dot--exercise { background: linear-gradient(90deg, var(--exerciseA), var(--exerciseB)); }
-.dot--stand { background: linear-gradient(90deg, var(--standA), var(--standB)); }
+    <nav class="tabs" aria-label="Primary">
+      <button class="tab-btn active" data-target="health">Health</button>
+      <button class="tab-btn" data-target="news">News</button>
+      <button class="tab-btn" data-target="day">Your Day</button>
+      <button class="tab-btn" data-target="drives">Drives</button>
+    </nav>
 
-/* ===== Multicolor Activity Rings styling ===== */
-.rings {
-  --size: 210px;
-  position: relative;
-  width: var(--size);
-  height: var(--size);
-}
+    <div class="search">
+      <input id="search" placeholder="Search sections or type a web query…" />
+      <button id="searchGo">Go</button>
+    </div>
 
-.rings svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    <!-- Health -->
+    <section id="health" class="active" aria-labelledby="tab-health">
+      <h2>Health</h2>
+      <div class="goal">
+        <div class="metric">
+          <label for="step-goal">Step Goal</label>
+          <input id="step-goal" type="number" value="10000" style="width:110px; padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.10); color:#fff"/>
+        </div>
+        <div class="metric">Steps today: <strong id="current-steps">0</strong></div>
+        <button id="add-steps" class="tab-btn">+1,000</button>
+      </div>
 
-.rings .track {
-  stroke: #ffffff12;
-  filter: drop-shadow(0 0 1px rgba(0,0,0,0.8));
-}
+      <div class="divider"></div>
 
-/* outer (Move) */
-.rings .move {
-  stroke: url(#gradMove);
-  filter: drop-shadow(0 0 8px rgba(255, 99, 64, 0.65));
-  transition: stroke-dashoffset 0.5s ease;
-}
+      <h3>Food tracker</h3>
+      <input type="file" id="food-image" accept="image/*" />
+      <div id="food-list" class="food-list" aria-live="polite"></div>
 
-/* middle (Exercise) */
-.rings .exercise {
-  stroke: url(#gradExercise);
-  filter: drop-shadow(0 0 8px rgba(66, 220, 110, 0.55));
-  transition: stroke-dashoffset 0.5s ease;
-}
+      <div class="divider"></div>
 
-/* inner (Stand) */
-.rings .stand {
-  stroke: url(#gradStand);
-  filter: drop-shadow(0 0 8px rgba(20, 132, 255, 0.55));
-  transition: stroke-dashoffset 0.5s ease;
-}
+      <h3>AI suggestions (demo)</h3>
+      <button id="gen-suggestions" class="tab-btn">Generate weekly plan</button>
+      <div id="suggestions" class="muted" style="margin-top:8px"></div>
+    </section>
 
-/* center label */
-.rings .label {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  transform: translateZ(0); /* crisper on mobile */
-}
-.rings .percent { font-size: 28px; font-weight: 800; }
-.rings .small { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    <!-- News -->
+    <section id="news">
+      <h2>News</h2>
+      <ul id="news-list">
+        <li class="muted">Loading sample headlines…</li>
+      </ul>
+    </section>
 
-/* ===== Glassy ProgressBar ===== */
-.pb { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; }
-.pb__label { grid-column: 1 / -1; font-size: 13px; color: var(--muted); margin-bottom: 2px; }
-.pb__suffix { font-size: 12px; color: var(--muted); margin-left: 8px; }
+    <!-- Your Day -->
+    <section id="day">
+      <h2>Your Day</h2>
+      <p class="muted">A snapshot of your day (meetings, reminders, goals) will appear here. This is a demo placeholder.</p>
+      <div class="divider"></div>
+      <div class="metric">Wake window: <strong>7:00–23:00</strong></div>
+      <div class="metric">Focus block: <strong>14:00–16:00</strong></div>
+    </section>
 
-.pb__rail {
-  position: relative;
-  overflow: hidden;
-  height: 18px;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #1c1c21, #141418);
-  border: 1px solid #ffffff1a;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06),
-              0 4px 14px rgba(0,0,0,0.35);
-}
+    <!-- Drives -->
+    <section id="drives">
+      <h2>Drives</h2>
+      <p class="muted">Future storage & integrations. Coming in later iterations.</p>
+    </section>
+  </div>
 
-.pb__fill {
-  position: relative;
-  height: 100%;
-  border-radius: 10px;
-  transition: width 400ms ease;
-  background: linear-gradient(90deg, #7aa2ff, #8cb8ff);
-  box-shadow: 0 0 12px rgba(124, 164, 255, 0.45);
-}
+  <!-- iOS-like bottom dock -->
+  <div class="dock" role="tablist" aria-label="Bottom navigation">
+    <button class="dock-btn active" data-target="health">
+      <img src="assets/icon.svg" alt="" style="width:22px;height:22px"/>
+      <span>Health</span>
+    </button>
+    <button class="dock-btn" data-target="news"><span>📰</span><span>News</span></button>
+    <button class="dock-btn" data-target="day"><span>📅</span><span>Your Day</span></button>
+    <button class="dock-btn" data-target="drives"><span>🗂️</span><span>Drives</span></button>
+  </div>
 
-.pb__shine {
-  position: absolute;
-  inset: 0 0 0 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0));
-  mix-blend-mode: overlay;
-  animation: shineMove 2.8s linear infinite;
-}
+  <script>
+    // --- Time-of-day theme
+    (function setThemeByTime(){
+      const h = new Date().getHours();
+      const root = document.documentElement;
+      if (h < 12) document.body.style.background = getComputedStyle(root).getPropertyValue('--morning');
+      else if (h < 18) document.body.style.background = getComputedStyle(root).getPropertyValue('--afternoon');
+      else document.body.style.background = getComputedStyle(root).getPropertyValue('--evening');
+    })();
 
-@keyframes shineMove {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(100%); }
-}
+    // --- Tabs sync (top + dock)
+    function activate(tab){
+      document.querySelectorAll('.tab-btn, .dock-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll(`.tab-btn[data-target="${tab}"], .dock-btn[data-target="${tab}"]`).forEach(b=>b.classList.add('active'));
+      document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.querySelectorAll('.tab-btn, .dock-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>activate(btn.dataset.target));
+    });
 
-/* ===== Bottom tabs (static) ===== */
-.tabs {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: 70px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  background: rgba(20,20,22,0.7);
-  backdrop-filter: blur(16px);
-  border-top: 1px solid #ffffff12;
-}
-.tabs__btn {
-  background: transparent;
-  border: 0;
-  color: var(--muted);
-  display: grid; place-items: center;
-  gap: 4px;
-}
-.tabs__btn span { font-size: 16px; }
-.tabs__btn--active { color: #fff; }
+    // --- Search
+    function goSearch(){
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      if (!q) return;
+      const sections = ['health','news','day','drives'];
+      const found = sections.find(s=> s.includes(q) || q.includes(s));
+      if (found) activate(found);
+      else window.open('https://www.google.com/search?q='+encodeURIComponent(q),'_blank');
+    }
+    document.getElementById('searchGo').addEventListener('click', goSearch);
+    document.getElementById('search').addEventListener('keydown', e=>{ if(e.key==='Enter') goSearch(); });
+
+    // --- Health demo
+    const stepsEl = document.getElementById('current-steps');
+    document.getElementById('add-steps').addEventListener('click', ()=>{
+      stepsEl.textContent = (parseInt(stepsEl.textContent,10) + 1000).toString();
+    });
+
+    document.getElementById('food-image').addEventListener('change', e=>{
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.src = url; img.alt = 'Meal'; img.loading = 'lazy';
+      img.addEventListener('load', ()=> URL.revokeObjectURL(url));
+      document.getElementById('food-list').appendChild(img);
+      e.target.value = '';
+    });
+
+    document.getElementById('gen-suggestions').addEventListener('click', ()=>{
+      const goals = [
+        'High-protein & steps focus',
+        'Balanced macros & mobility',
+        'Cutting phase (light deficit)',
+        'Endurance & hydration'
+      ];
+      const meals = [
+        'Greek yogurt + berries • Quinoa salad • Salmon + greens',
+        'Oats + banana • Chickpea wrap • Tofu stir-fry',
+        'Egg white scramble • Chicken bowl • Lentil soup',
+        'Smoothie bowl • Tuna sandwich • Grilled paneer + veggies'
+      ];
+      const workouts = [
+        'Mon/Wed/Fri: 30-min HIIT • Tue/Thu: 20-min mobility',
+        '4× week full-body 45-min • Daily 8k steps',
+        'Upper/Lower split • Weekend hike',
+        'Zone-2 cardio 30-min daily • 2× strength sessions'
+      ];
+      const i = Math.floor(Math.random()*goals.length);
+      document.getElementById('suggestions').innerHTML = `
+        <div><strong>Goal:</strong> ${goals[i]}</div>
+        <div><strong>Meals:</strong> ${meals[i]}</div>
+        <div><strong>Workouts:</strong> ${workouts[i]}</div>
+      `;
+    });
+
+    // --- News: simple mock headlines
+    (function loadNews(){
+      const sample = [
+        { title:'AI wearable trends to watch this year', url:'#' },
+        { title:'Healthy habits: why small steps win', url:'#' },
+        { title:'Focus routines from top founders', url:'#' },
+        { title:'Meal prep hacks for busy weeks', url:'#' },
+        { title:'The future of personal “super-apps”', url:'#' },
+      ];
+      const ul = document.getElementById('news-list');
+      ul.innerHTML = '';
+      sample.forEach(a=>{
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>`;
+        ul.appendChild(li);
+      });
+    })();
+
+    // --- PWA: register SW
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', ()=> {
+        navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+      });
+    }
+  </script>
+</body>
+</html>
