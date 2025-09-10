@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
   <meta charset="UTF-8" />
   <title>LifeOS V1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  
+
   <!-- PWA essentials -->
   <meta name="theme-color" content="#66A6FF" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-  <link rel="icon" href="/icons/icon-192x192.png" type="image/png" />
-  
-  <!-- iOS web app mode -->
+  <link rel="icon" href="/icons/icon-512x512.png" type="image/png" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 
   <style>
     :root{
@@ -23,9 +22,9 @@
       --text:#fff;
 
       /* Higher-contrast gradients */
-      --morning:   linear-gradient(135deg,#FF9A9E 0%, #FAD0C4 100%);  /* sunrise pink/orange */
-      --afternoon: linear-gradient(135deg,#89F7FE 0%, #66A6FF 100%);  /* bright sky blue */
-      --evening:   linear-gradient(135deg,#2C3E50 0%, #4CA1AF 100%);  /* deep night teal */
+      --morning:   linear-gradient(135deg,#FF9A9E 0%, #FAD0C4 100%);
+      --afternoon: linear-gradient(135deg,#89F7FE 0%, #66A6FF 100%);
+      --evening:   linear-gradient(135deg,#2C3E50 0%, #4CA1AF 100%);
 
       --card-radius:18px;
       --shadow: 0 10px 30px rgba(0,0,0,0.25);
