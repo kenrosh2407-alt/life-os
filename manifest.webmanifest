@@ -1,0 +1,11 @@
+{
+  "name": "LifeOS",
+  "short_name": "LifeOS",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#66A6FF",
+  "theme_color": "#66A6FF",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose":"any" }
+  ]
+}
