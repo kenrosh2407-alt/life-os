@@ -1,24 +1,21 @@
 [build]
-  command   = "npm ci && npm run build"
-  publish   = "dist"
-  node_version = "20"
+  command = "npm run build"
+  publish = "dist"
 
+# Single Page App fallback
 [[redirects]]
   from = "/*"
-  to   = "/index.html"
+  to = "/index.html"
   status = 200
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-
+# Ensure SW updates promptly
 [[headers]]
   for = "/sw.js"
   [headers.values]
     Cache-Control = "no-cache"
 
+# (Optional) correct manifest MIME
 [[headers]]
-  for = "/workbox-*.js"
+  for = "/manifest.webmanifest"
   [headers.values]
-    Cache-Control = "no-cache"
+    Content-Type = "application/manifest+json"
